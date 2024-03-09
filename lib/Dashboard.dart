@@ -1,9 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class Dashboard extends StatelessWidget {
+class Dashboard extends StatefulWidget {
   const Dashboard({super.key});
 
+  @override
+  State<Dashboard> createState() => _DashboardState();
+}
+
+class _DashboardState extends State<Dashboard> {
+  List<String> data = [
+    'Apple',
+    'Banana',
+    'Cherry',
+    'Date',
+    'Elderberry',
+    'Fig',
+    'Grapes',
+    'Honeydew',
+    'Kiwi',
+    'Lemon',
+  ];
+  List<String> searchResults = [];
+  String query = '';
+
+  void onQueryChanged(String newQuery) {
+    setState(() {
+      query = newQuery;
+      searchResults = data
+          .where((item) => item.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -13,7 +42,79 @@ class Dashboard extends StatelessWidget {
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        child: Center(child: Text("Welcome to Dashboard")),
+
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(bottomLeft: Radius.circular(20),bottomRight: Radius.circular(20),),
+                      gradient: LinearGradient(
+                          colors: [
+                            Color(0xffFF7F50),
+                            Color(0xffDE3163)
+
+
+                          ]
+                      )
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text("WELCOME TO DASHBOARD ADMIN",style: TextStyle(color: Colors.white,fontSize: 30,fontWeight: FontWeight.bold),),
+                    ),
+                  ),
+
+                ],
+              ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    onChanged: onQueryChanged,
+                  decoration: InputDecoration(
+                  labelText: 'Search',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.search),
+                  ),
+                  ),
+                ),
+              GridView.builder(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                shrinkWrap: true,
+                itemCount: searchResults.length,
+                scrollDirection: Axis.vertical,
+                itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.pink,
+                    borderRadius: BorderRadius.circular(40),
+                    image: DecorationImage(
+                        fit: BoxFit.fill,
+                        image:
+                    NetworkImage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSThUethjmb-2LgWaeos35CTTjlAGy_FJnmCA&usqp=CAU')
+                    )
+
+                  ),
+                   child:Center(child: Padding(
+                     padding: const EdgeInsets.only(top: 100),
+                     child: Text(searchResults[index],style: TextStyle(color: Colors.white,fontSize: 20),),
+                   )),
+                  ),
+                );
+              },),
+              // ListView.builder(
+              //   itemCount: searchResults.length,
+              //   itemBuilder: (context, index) {
+              //     return ListTile(
+              //       title: Text(searchResults[index]),
+              //     );
+              //   },
+              // ),
+            ],
+          ),
+        ),
 
 
 
